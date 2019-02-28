@@ -214,11 +214,7 @@ dl {
     dt,
     dd {
         font-feature-settings: 'kern', 'onum', 'liga';
-        margin-left: 2rem;
-
-        @include breakpoint(break-1) {
-            margin-left: 0;
-        }
+        margin-left: 0;
     }
 
     dt {
