@@ -396,3 +396,12 @@ mark {
     text-transform: lowercase;
     font-variant: small-caps;
 }
+
+main>h2:first-of-type {
+    display: none;
+}
+
+main>p:first-of-type {
+    font-size: larger;
+    padding: 1em 0;
+}
