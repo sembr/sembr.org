@@ -394,3 +394,9 @@ code {
 .oldstyle-numerals {
     font-feature-settings: 'onum', 'kern';
 }
+
+mark {
+    background: transparent;
+    text-transform: lowercase;
+    font-variant: small-caps;
+}

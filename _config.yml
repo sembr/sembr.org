@@ -6,7 +6,7 @@ description: >-
 url: https://sembr.org
 github_username: sembr
 
-markdown: CommonMark
+markdown: ExtendedCommonMark
 commonmark:
   options: ["SMART", "UNSAFE"]
   extensions: ["autolink"]
