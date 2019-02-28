@@ -7,8 +7,13 @@ main {
 
 ul,
 ol {
-    padding-left: 4em;
-    padding-right: 4em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+
+    @include breakpoint(break-1) {
+        padding-left: 4em;
+        padding-right: 4em;
+    }
 }
 
 pre {
