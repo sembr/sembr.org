@@ -79,7 +79,8 @@ h1,
 .alpha {
     @include sassline($fontsize: alpha, $font: $headingtype, $lineheight: 3, $below: 3, $breakpoint: all);
     text-align: center;
-    font-size: 4rem !important;
+
+    font-size: 2.5em !important;
     line-height: 1 !important;
     padding-bottom: 1rem;
 }
@@ -395,6 +396,10 @@ mark {
     background: transparent;
     text-transform: lowercase;
     font-variant: small-caps;
+}
+
+main>h1:first-of-type {
+    white-space: pre;
 }
 
 main>h2:first-of-type {
