@@ -1,0 +1,37 @@
+title: Semantic Line Breaks
+email: info@sembr.org
+description: >-
+  When writing text using a compatible markup language,
+  add single line breaks after substantial units of thought.
+url: https://sembr.org
+github_username: sembr
+
+markdown: CommonMark
+commonmark:
+  options: ["SMART", "UNSAFE"]
+  extensions: ["autolink"]
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+  - scope:
+      path: specification/README.md
+    values:
+      permalink: "/"
+
+include:
+  - specification/README.md
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
+assets:
+  source_maps: true
+  compression: true
+  defaults:
+    js: { integrity: true }
+    css: { integrity: true }
+    img: { integrity: true }

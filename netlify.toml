@@ -1,0 +1,40 @@
+[build]
+  publish = "_site"
+  command = "git submodule update --init --remote --merge && jekyll build"
+
+[context.production]
+  environment = { JEKYLL_ENV = "production" }
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = """
+        default-src 'none';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self';
+        frame-ancestors 'none';
+        base-uri 'none';
+        upgrade-insecure-requests;
+        report-uri https://readeval.report-uri.com/r/d/ct/reportOnly;
+    """
+    Expect-CT = """
+        max-age=0, report-uri="https://readeval.report-uri.com/r/d/ct/reportOnly"
+    """
+    Referrer-Policy = "same-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+
+[[redirects]]
+  from = "http://sembr.netlify.com/*"
+  to = "https://sembr.org/:splat"
+
+[[redirects]]
+  from = "https://sembr.netlify.com/*"
+  to = "https://sembr.org/:splat"
+
+[[redirects]]
+  from = "https://sembr.org/specification/*"
+  to = "https://sembr.org"
