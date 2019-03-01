@@ -22,6 +22,8 @@ GEM
     fastimage (2.1.5)
     ffi (1.10.0)
     forwardable-extended (2.6.0)
+    htmlbeautifier (1.3.1)
+    htmlcompressor (0.4.0)
     http_parser.rb (0.6.0)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
@@ -58,10 +60,18 @@ GEM
       jekyll (~> 3.1)
     jekyll-sass-converter (1.5.2)
       sass (~> 3.4)
+    jekyll-sitemap (1.2.0)
+      jekyll (~> 3.3)
+    jekyll-tidy (0.2.2)
+      htmlbeautifier
+      htmlcompressor
+      jekyll
     jekyll-watch (2.1.2)
       listen (~> 3.0)
     kramdown (1.17.0)
     liquid (4.0.1)
+    liquid-c (4.0.0)
+      liquid (>= 3.0.0)
     liquid-tag-parser (1.9.0)
       extras (~> 0.3)
       liquid (>= 3.0, < 5.0)
@@ -110,6 +120,9 @@ DEPENDENCIES
   jekyll-assets
   jekyll-commonmark
   jekyll-optional-front-matter
+  jekyll-sitemap
+  jekyll-tidy
+  liquid-c
   sassc
   tzinfo-data
 
