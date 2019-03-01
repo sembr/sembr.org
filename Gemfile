@@ -10,6 +10,8 @@ group :jekyll_plugins do
   gem 'jekyll-assets'
   gem 'jekyll-commonmark'
   gem 'jekyll-optional-front-matter'
+  gem 'jekyll-sitemap'
+  gem 'jekyll-tidy'
 end
 
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
