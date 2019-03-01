@@ -6,9 +6,12 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="format-detection" content="telephone=no" />
     <title>{{ site.title }}</title>
     {% asset "main.css" @inline %}
+    <meta
+      name="description"
+      content="{{ site.description | markdownify | strip_html | escape }}"
+    />
     <link rel="canonical" href="{{ site.url }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -26,15 +29,20 @@
     <meta name="twitter:title" content="{{ site.title }}" />
     <meta
       name="twitter:description"
-      content="{{ site.description | strip_html | escape }}"
+      content="{{ site.description | markdownify | strip_html | escape }}"
     />
 
     <meta property="og:title" content="{{ site.title }}" />
-    <meta property="og:description" content="{{ site.description }}" />
+    <meta
+      property="og:description"
+      content="{{ site.description | markdownify | strip_html | escape }}"
+    />
     <meta property="og:url" content="{{ site.url }}" />
     <meta property="og:image" content="{{ site.url }}/banner.png" />
     <meta property="og:image:width" content="1433" />
     <meta property="og:image:height" content="750" />
+
+    <meta name="format-detection" content="telephone=no" />
 
     <link
       rel="license"
