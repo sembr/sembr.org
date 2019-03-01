@@ -22,6 +22,7 @@ defaults:
       permalink: "/"
 
 include:
+  - .well-known
   - specification/README.md
 
 exclude:
