@@ -22,13 +22,13 @@ module Jekyll
         private
 
         def add_word_break_opportunity!(markdown)
-          markdown.sub!(/^\#\s+(\w+\b)(.+)$/, '# \1<wbr/>\2')
+          markdown.sub!(/^\#\s+(Semantic Line Breaks)\s+$/, '# Semantic Line&nbsp;Breaks')
         end
 
         def wrap_rfc2119_keywords!(markdown)
-           markdown.gsub!(/(#{KEYWORDS.join('|')})/, '<mark>\1</mark>')
+          markdown.gsub!(/(#{KEYWORDS.join('|')})/, '<mark>\1</mark>')
         end
       end
-  end
+    end
   end
 end
