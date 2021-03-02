@@ -1,13 +1,15 @@
 source "https://rubygems.org"
 
-gem "jekyll", "~> 3.8.5"
+gem "jekyll"
+gem "kramdown", ">= 2.3.0"
 
 gem 'liquid-c'
 
 gem "sassc"
 
 group :jekyll_plugins do
-  gem 'jekyll-assets'
+  gem 'jekyll-assets', git: 'https://github.com/envygeeks/jekyll-assets.git',
+                       branch: 'master'
   gem 'jekyll-commonmark'
   gem 'jekyll-optional-front-matter'
   gem 'jekyll-sitemap'
