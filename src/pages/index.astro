@@ -1,0 +1,29 @@
+---
+export const prerender = false;
+
+import { getEntry, render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const entry = await getEntry("specification", "sembr");
+
+if (!entry) {
+	throw new Error("SemBr specification not available.");
+}
+
+if (!Astro.request.headers.get("accept")?.includes("text/html")) {
+	return new Response(entry.body, {
+		headers: {
+			"Content-Type": "text/markdown; charset=utf-8",
+			Vary: "Accept",
+		},
+	});
+}
+
+Astro.response.headers.set("Vary", "Accept");
+
+const { Content } = await render(entry);
+---
+
+<Layout>
+	<Content />
+</Layout>
