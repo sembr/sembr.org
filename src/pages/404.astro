@@ -1,0 +1,70 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+	title="404 — Page not found"
+	description="This URL does not resolve to a page on Semantic Line Breaks (SemBr)."
+	imageAlt="Semantic Line Breaks specification"
+>
+	<article>
+		<h1>
+			<span>404</span>
+			<span>Page not found</span>
+		</h1>
+		<p>
+			<a href="/">Return to the Semantic Line Breaks specification</a>
+		</p>
+	</article>
+</Layout>
+
+<style>
+	article {
+		margin-inline: auto;
+		max-width: 34rem;
+		text-align: center;
+		padding-block: var(--space-l);
+
+		& h1 {
+			margin: 0 0 var(--space-m);
+			color: var(--color-heading);
+
+			& > span:first-child {
+				display: block;
+				margin-block-end: var(--space-m);
+				font-family: var(--font-serif);
+				font-size: clamp(3.25rem, 14vw, 5.5rem);
+				font-weight: 400;
+				line-height: 1;
+				letter-spacing: -0.04em;
+			}
+
+			& > span:last-child {
+				display: block;
+				font-family: var(--font-serif);
+				font-size: clamp(1.35rem, 4vw, 1.65rem);
+				font-weight: 400;
+				line-height: var(--space-m);
+			}
+		}
+
+		& hr {
+			width: min(11rem, 55%);
+			margin: var(--space-l) auto;
+			border: none;
+			border-top: var(--rule) solid var(--color-rule);
+		}
+
+		& p {
+			margin-block-end: var(--space-m);
+		}
+
+		& p:last-of-type {
+			margin-block-start: var(--space-l);
+
+			& a {
+				font-family: var(--font-sans);
+			}
+		}
+	}
+</style>

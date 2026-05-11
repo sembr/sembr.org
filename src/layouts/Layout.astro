@@ -1,0 +1,96 @@
+---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import banner from "../assets/banner.png";
+
+interface Props {
+	title?: string;
+	description?: string;
+	imageAlt?: string;
+}
+
+const {
+	title = "Semantic Line Breaks",
+	description = "When writing text with a compatible markup language, add a line break after each substantial unit of thought.",
+	imageAlt = "Semantic Line Breaks specification",
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const bannerUrl = new URL(banner.src, Astro.site).href;
+
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "TechArticle",
+	headline: title,
+	description,
+	url: canonicalUrl.href,
+	image: bannerUrl,
+	inLanguage: "en",
+	author: {
+		"@type": "Person",
+		name: "Mattt",
+		url: "https://mat.tt",
+	},
+	license: "https://creativecommons.org/licenses/by-nc/4.0/",
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<Font cssVariable="--font-creative-commons-symbols" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+		/>
+		<meta name="generator" content={Astro.generator} />
+		<meta name="color-scheme" content="light" />
+		<meta name="theme-color" content="#ffffff" />
+		<meta name="format-detection" content="telephone=no" />
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="author" content="Mattt" />
+		<link rel="canonical" href={canonicalUrl} />
+		<link
+			rel="license"
+			href="https://creativecommons.org/licenses/by-nc/4.0/"
+		/>
+
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<meta name="apple-mobile-web-app-title" content="SemBr" />
+
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="Semantic Line Breaks" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={bannerUrl} />
+		<meta property="og:image:width" content={String(banner.width)} />
+		<meta property="og:image:height" content={String(banner.height)} />
+		<meta property="og:image:alt" content={imageAlt} />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:creator" content="@mattt" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={bannerUrl} />
+		<meta name="twitter:image:alt" content={imageAlt} />
+
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify(structuredData)}
+		/>
+	</head>
+
+	<body>
+		<main>
+			<slot />
+		</main>
+	</body>
+</html>
