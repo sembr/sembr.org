@@ -1,5 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
+import { parse as parseYaml } from 'yaml';
 
 const SPEC_URL = 'https://raw.githubusercontent.com/sembr/specification/main/README.md';
 const SKILLS_REPO = 'https://raw.githubusercontent.com/sembr/skills/main/skills';
@@ -48,18 +49,31 @@ const specification = defineCollection({
 	},
 });
 
-function parseSkillFrontmatter(source: string): { name: string; description: string } {
+function parseSkillFrontmatter(
+	source: string,
+	context: { id: string; url: string },
+): { name: string; description: string } {
 	const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
 	if (!match) {
-		throw new Error('SKILL.md is missing YAML frontmatter');
+		throw new Error(`SKILL.md is missing YAML frontmatter for "${context.id}" (${context.url})`);
 	}
-	const frontmatter = match[1];
-	const name = frontmatter.match(/^name:\s*(.+?)\s*$/m)?.[1];
-	const description = frontmatter.match(/^description:\s*(.+?)\s*$/m)?.[1];
-	if (!name || !description) {
-		throw new Error('SKILL.md frontmatter must define `name` and `description`');
+	let parsedFrontmatter: unknown;
+	try {
+		parsedFrontmatter = parseYaml(match[1]);
+	} catch (error) {
+		throw new Error(
+			`Invalid YAML frontmatter for "${context.id}" (${context.url}): ${String(error)}`,
+		);
 	}
-	return { name, description };
+	const result = z
+		.object({ name: z.string(), description: z.string() })
+		.safeParse(parsedFrontmatter);
+	if (!result.success) {
+		throw new Error(
+			`SKILL.md frontmatter for "${context.id}" (${context.url}) must define string \`name\` and \`description\` fields`,
+		);
+	}
+	return result.data;
 }
 
 const skills = defineCollection({
@@ -82,7 +96,10 @@ const skills = defineCollection({
 				}
 
 				const source = await response.text();
-				const data = await parseData({ id, data: parseSkillFrontmatter(source) });
+				const data = await parseData({
+					id,
+					data: parseSkillFrontmatter(source, { id, url }),
+				});
 				store.set({ id, data, body: source, digest: generateDigest(source) });
 			}
 		},
