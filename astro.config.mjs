@@ -4,6 +4,29 @@ import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 import { remarkSembr } from './src/lib/remark-sembr.ts';
 
+/**
+ * Exposes Agent Skills at the RFC 8615 well-known endpoint
+ * so users can run `npx skills add https://sembr.org`. 
+ * See https://github.com/vercel-labs/skills.
+ *
+ * @type {import('astro').AstroIntegration}
+ */
+const wellKnownSkills = {
+	name: 'well-known-skills',
+	hooks: {
+		'astro:config:setup': ({ injectRoute }) => {
+			injectRoute({
+				pattern: '/.well-known/agent-skills/index.json',
+				entrypoint: './src/wellknown/index.ts',
+			});
+			injectRoute({
+				pattern: '/.well-known/agent-skills/[name]/[file]',
+				entrypoint: './src/wellknown/skill.ts',
+			});
+		},
+	},
+};
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -40,5 +63,5 @@ export default defineConfig({
 	security: {
 		csp: true
 	},
-	integrations: [sitemap()],
+	integrations: [sitemap(), wellKnownSkills],
 });

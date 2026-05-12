@@ -1,6 +1,12 @@
 import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 
 const SPEC_URL = 'https://raw.githubusercontent.com/sembr/specification/main/README.md';
+const SKILLS_REPO = 'https://raw.githubusercontent.com/sembr/skills/main/skills';
+
+// Skills exposed under /.well-known/agent-skills/.
+// Add new entries here when the sembr/skills repo grows.
+const SKILL_NAMES = ['sembr-reformat'] as const;
 
 // Convert raw HTML constructs in the spec source into plain Markdown for
 // clients that consume `entry.body` directly 
@@ -42,4 +48,45 @@ const specification = defineCollection({
 	},
 });
 
-export const collections = { specification };
+function parseSkillFrontmatter(source: string): { name: string; description: string } {
+	const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+	if (!match) {
+		throw new Error('SKILL.md is missing YAML frontmatter');
+	}
+	const frontmatter = match[1];
+	const name = frontmatter.match(/^name:\s*(.+?)\s*$/m)?.[1];
+	const description = frontmatter.match(/^description:\s*(.+?)\s*$/m)?.[1];
+	if (!name || !description) {
+		throw new Error('SKILL.md frontmatter must define `name` and `description`');
+	}
+	return { name, description };
+}
+
+const skills = defineCollection({
+	schema: z.object({
+		name: z.string(),
+		description: z.string(),
+	}),
+	loader: {
+		name: 'sembr-skills',
+		load: async ({ store, parseData, generateDigest, logger }) => {
+			for (const id of SKILL_NAMES) {
+				const url = `${SKILLS_REPO}/${id}/SKILL.md`;
+				logger.info(`Fetching ${url}`);
+
+				const response = await fetch(url);
+				if (!response.ok) {
+					throw new Error(
+						`Failed to fetch skill ${id}: ${response.status} ${response.statusText}`,
+					);
+				}
+
+				const source = await response.text();
+				const data = await parseData({ id, data: parseSkillFrontmatter(source) });
+				store.set({ id, data, body: source, digest: generateDigest(source) });
+			}
+		},
+	},
+});
+
+export const collections = { specification, skills };
