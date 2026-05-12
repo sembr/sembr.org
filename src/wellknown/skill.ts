@@ -11,8 +11,12 @@ export async function getStaticPaths() {
 }
 
 export const GET: APIRoute = async ({ params }) => {
-	const entry = await getEntry('skills', params.name as string);
-	if (!entry || params.file !== 'SKILL.md') {
+	if (typeof params.name !== 'string' || params.file !== 'SKILL.md') {
+		return new Response('Not Found', { status: 404 });
+	}
+
+	const entry = await getEntry('skills', params.name);
+	if (!entry) {
 		return new Response('Not Found', { status: 404 });
 	}
 	return new Response(entry.body, {
