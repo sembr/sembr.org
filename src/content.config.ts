@@ -22,9 +22,6 @@ function sha256Digest(source: string): string {
 function toPlainMarkdown(body: string): string {
 	return body
 		.replace(/^<pre>\n([\s\S]*?)\n<\/pre>$/gm, '```\n$1\n```')
-		.replace(/^<\/?dl>\s*$/gm, '')
-		.replace(/^<dt>(.*?)<\/dt>\s*$/gm, '### $1')
-		.replace(/^<\/?dd>\s*$/gm, '')
 		.replace(/\n{3,}/g, '\n\n');
 }
 
