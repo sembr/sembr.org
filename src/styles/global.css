@@ -307,6 +307,7 @@
 	code {
 		font-size: 0.9em;
 		line-height: var(--space-s);
+		white-space: nowrap;
 	}
 
 	pre {
@@ -318,6 +319,7 @@
 
 		& code {
 			font-size: inherit;
+			white-space: inherit;
 		}
 
 		&.sembr {
