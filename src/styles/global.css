@@ -311,7 +311,7 @@
 
 	pre {
 		display: block;
-		overflow-x: scroll;
+		overflow-x: auto;
 		width: 100%;
 		padding: var(--space-s);
 		font-size: calc((min(100vw, 900px) - 5rem) / 50);
