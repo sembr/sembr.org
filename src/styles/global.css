@@ -258,28 +258,15 @@
 	li,
 	dd {
 		& a {
-			background-image: linear-gradient(to bottom,
-					transparent 50%,
-					#568af8 50%);
-			background-image: linear-gradient(to bottom,
-					transparent 50%,
-					color-mix(in oklch, var(--color-link) 70%, white) 50%);
-			background-position: 0 93%;
-			background-repeat: repeat-x;
-			background-size: 100% var(--rule);
-			text-shadow:
-				0.1rem 0 var(--color-bg),
-				var(--rule) 0 var(--color-bg),
-				-0.1rem 0 var(--color-bg),
-				calc(-1 * var(--rule)) 0 var(--color-bg);
+			text-decoration: underline;
+			text-decoration-color: #568af8;
+			text-decoration-color: color-mix(in oklch, var(--color-link) 70%, white);
+			text-decoration-thickness: var(--rule);
+			text-underline-offset: 0.2em;
 
 			&:is(:hover, :active, :focus-visible) {
-				background-image: linear-gradient(to bottom,
-						transparent 50%,
-						#5465ab 50%);
-				background-image: linear-gradient(to bottom,
-						transparent 50%,
-						color-mix(in oklch, var(--color-link-hover) 70%, white) 50%);
+				text-decoration-color: #5465ab;
+				text-decoration-color: color-mix(in oklch, var(--color-link-hover) 70%, white);
 			}
 		}
 	}
