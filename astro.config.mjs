@@ -23,6 +23,18 @@ const wellKnownSkills = {
 				pattern: '/.well-known/agent-skills/[name]/[file]',
 				entrypoint: './src/wellknown/skill.ts',
 			});
+			injectRoute({
+				pattern: '/.well-known/api-catalog',
+				entrypoint: './src/wellknown/api-catalog.ts',
+			});
+			injectRoute({
+				pattern: '/.well-known/openapi.json',
+				entrypoint: './src/wellknown/openapi.ts',
+			});
+			injectRoute({
+				pattern: '/.well-known/mcp/server-card.json',
+				entrypoint: './src/wellknown/mcp-server-card.ts',
+			});
 		},
 	},
 };
