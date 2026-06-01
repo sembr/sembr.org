@@ -106,3 +106,5 @@ window.addEventListener(
 	},
 	{ once: true },
 );
+
+export { };
