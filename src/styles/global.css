@@ -328,6 +328,7 @@
 	::-webkit-scrollbar {
 		-webkit-appearance: none;
 		width: 3px;
+		height: 3px;
 	}
 
 	::-webkit-scrollbar-thumb {
