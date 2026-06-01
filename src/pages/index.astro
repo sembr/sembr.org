@@ -2,6 +2,7 @@
 export const prerender = false;
 
 import { getEntry, render } from "astro:content";
+import { discoveryLinkHeader } from "../lib/discovery";
 import Layout from "../layouts/Layout.astro";
 
 const entry = await getEntry("specification", "sembr");
@@ -10,15 +11,19 @@ if (!entry) {
 	throw new Error("SemBr specification not available.");
 }
 
+const linkHeader = discoveryLinkHeader();
+
 if (!Astro.request.headers.get("accept")?.includes("text/html")) {
 	return new Response(entry.body, {
 		headers: {
 			"Content-Type": "text/markdown; charset=utf-8",
+			Link: linkHeader,
 			Vary: "Accept",
 		},
 	});
 }
 
+Astro.response.headers.set("Link", linkHeader);
 Astro.response.headers.set("Vary", "Accept");
 
 const { Content } = await render(entry);
