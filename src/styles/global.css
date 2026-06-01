@@ -307,17 +307,19 @@
 	code {
 		font-size: 0.9em;
 		line-height: var(--space-s);
+		white-space: nowrap;
 	}
 
 	pre {
 		display: block;
-		overflow-x: scroll;
+		overflow-x: auto;
 		width: 100%;
 		padding: var(--space-s);
 		font-size: calc((min(100vw, 900px) - 5rem) / 50);
 
 		& code {
 			font-size: inherit;
+			white-space: inherit;
 		}
 
 		&.sembr {
@@ -328,11 +330,80 @@
 	::-webkit-scrollbar {
 		-webkit-appearance: none;
 		width: 3px;
+		height: 3px;
 	}
 
 	::-webkit-scrollbar-thumb {
 		border-radius: 2px;
 		background-color: var(--color-rule);
+	}
+
+	/* Tables */
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.9em;
+		font-feature-settings: "kern", "lnum", "tnum";
+	}
+
+	caption {
+		margin-block-end: var(--space-s);
+		color: var(--color-heading);
+		font-family: var(--font-sans);
+		font-weight: 700;
+		text-align: start;
+	}
+
+	th,
+	td {
+		padding: 0.5em 0.75em;
+		text-align: start;
+		vertical-align: baseline;
+		overflow-wrap: break-word;
+	}
+
+	th:first-child,
+	td:first-child {
+		padding-inline-start: 0;
+	}
+
+	th:last-child,
+	td:last-child {
+		padding-inline-end: 0;
+		text-align: end;
+	}
+
+	th {
+		color: var(--color-heading);
+		font-family: var(--font-sans);
+		font-weight: 700;
+	}
+
+	thead {
+		border-block-end: var(--rule) solid var(--color-rule);
+	}
+
+	tbody tr+tr {
+		border-block-start: 1px solid var(--color-rule);
+	}
+
+	tbody tr>td:first-child {
+		font-weight: 700;
+	}
+
+	mark[data-supported="true"] {
+		color: var(--color-heading);
+	}
+
+	mark[data-supported="false"] {
+		color: var(--color-rule);
+	}
+
+	/* Footnotes */
+
+	.footnotes {
+		font-size: 0.85em;
 	}
 
 	/* Separator */
