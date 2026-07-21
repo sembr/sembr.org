@@ -185,6 +185,7 @@
 		position: relative;
 		padding-inline-start: var(--space-s);
 		margin-block-end: var(--space-s);
+		text-wrap: balance;
 	}
 
 	ol>li::marker {
@@ -379,11 +380,15 @@
 		font-weight: 700;
 	}
 
-	mark[data-supported="true"] {
+	tbody tr>td:nth-child(2) {
+		text-wrap: balance;
+	}
+
+	:is(mark, em)[data-supported="true"] {
 		color: var(--color-heading);
 	}
 
-	mark[data-supported="false"] {
+	:is(mark, em)[data-supported="false"] {
 		color: var(--color-rule);
 	}
 

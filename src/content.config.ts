@@ -25,21 +25,6 @@ function toPlainMarkdown(body: string): string {
 		.replace(/\n{3,}/g, '\n\n');
 }
 
-// Inject inline HTML into the spec source before rendering so that the FAQ
-// comparison table shows accessible support indicators in HTML, while the
-// plain Markdown body keeps its prose for curl/llms.txt consumers.
-function preprocessForRendering(source: string): string {
-	return source
-		.replace(
-			/\| Supported \|/g,
-			'| <mark data-supported="true" title="Supported" aria-label="Supported">✓</mark> |',
-		)
-		.replace(
-			/\| Not supported \|/g,
-			'| <mark data-supported="false" title="Not supported" aria-label="Not supported">✗</mark> |',
-		);
-}
-
 const specification = defineCollection({
 	loader: {
 		name: 'sembr-specification',
@@ -58,7 +43,7 @@ const specification = defineCollection({
 			const id = 'sembr';
 			const data = await parseData({ id, data: {} });
 			const digest = generateDigest(source);
-			const rendered = await renderMarkdown(preprocessForRendering(source));
+			const rendered = await renderMarkdown(source);
 			const body = toPlainMarkdown(source);
 
 			store.set({ id, data, body, digest, rendered });

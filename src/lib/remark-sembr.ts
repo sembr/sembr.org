@@ -2,7 +2,7 @@ import type { Definition, Html, Root, RootContent, Text } from 'mdast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 
-const KEYWORDS = [
+const RFC_2119_KEYWORDS = [
 	'MUST NOT',
 	'SHALL NOT',
 	'SHOULD NOT',
@@ -15,7 +15,7 @@ const KEYWORDS = [
 	'MAY',
 ] as const;
 
-const KEYWORD_PATTERN = new RegExp(`\\b(${KEYWORDS.join('|')})\\b`, 'g');
+const RFC_2119_PATTERN = new RegExp(`\\b(${RFC_2119_KEYWORDS.join('|')})\\b`, 'g');
 
 const EM_DASH = '\u2014';
 const EM_DASH_PATTERN = /---/g;
@@ -54,11 +54,13 @@ function ccSymbolsForLicenseUrl(rawUrl: string): string | null {
 
 export const remarkSembr: Plugin<[], Root> = () => {
 	return (tree) => {
+		// Collect link definitions for resolving Creative Commons references.
 		const definitions = new Map<string, string>();
 		visit(tree, 'definition', (node: Definition) => {
 			definitions.set(node.identifier, node.url);
 		});
 
+		// Mark multiline <pre> blocks as SemBr examples for whitespace styling.
 		visit(tree, 'html', (node) => {
 			const match = node.value.match(MULTILINE_PRE_PATTERN);
 			if (
@@ -70,6 +72,39 @@ export const remarkSembr: Plugin<[], Root> = () => {
 			}
 		});
 
+		// FAQ comparison table: accessible support indicators and styled "None".
+		visit(tree, 'tableCell', (node) => {
+			if (node.children.length !== 1 || node.children[0]?.type !== 'text') {
+				return;
+			}
+			const value = node.children[0].value;
+			if (value === 'Supported') {
+				node.children = [
+					{
+						type: 'html',
+						value:
+							'<mark data-supported="true" title="Supported" aria-label="Supported">✓</mark>',
+					},
+				];
+			} else if (value === 'Not supported') {
+				node.children = [
+					{
+						type: 'html',
+						value:
+							'<mark data-supported="false" title="Not supported" aria-label="Not supported">✗</mark>',
+					},
+				];
+			} else if (value === 'None') {
+				node.children = [
+					{
+						type: 'html',
+						value: '<em data-supported="false">None</em>',
+					},
+				];
+			}
+		});
+
+		// Keep "Line Breaks" on one line in the title via a non-breaking space.
 		visit(tree, 'heading', (node) => {
 			if (
 				node.depth === 1 &&
@@ -81,13 +116,14 @@ export const remarkSembr: Plugin<[], Root> = () => {
 			}
 		});
 
+		// Highlight RFC 2119 keywords and normalize --- to an em dash.
 		visit(tree, 'text', (node, index, parent) => {
 			if (!parent || typeof index !== 'number') {
 				return;
 			}
 
 			const value = node.value.replace(EM_DASH_PATTERN, EM_DASH);
-			const matches = [...value.matchAll(KEYWORD_PATTERN)];
+			const matches = [...value.matchAll(RFC_2119_PATTERN)];
 
 			if (matches.length === 0) {
 				if (value !== node.value) {
@@ -124,6 +160,7 @@ export const remarkSembr: Plugin<[], Root> = () => {
 			parent.children.splice(index, 1, ...(nodes as typeof parent.children));
 		});
 
+		// Prefix Creative Commons license links with Unicode license symbols.
 		visit(tree, ['link', 'linkReference'], (node, index, parent) => {
 			if (!parent || typeof index !== 'number') {
 				return;
