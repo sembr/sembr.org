@@ -185,6 +185,7 @@
 		position: relative;
 		padding-inline-start: var(--space-s);
 		margin-block-end: var(--space-s);
+		text-wrap: balance;
 	}
 
 	ol>li::marker {
@@ -377,6 +378,10 @@
 
 	tbody tr>td:first-child {
 		font-weight: 700;
+	}
+
+	tbody tr>td:nth-child(2) {
+		text-wrap: balance;
 	}
 
 	:is(mark, em)[data-supported="true"] {
