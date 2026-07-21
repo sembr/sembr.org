@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 import { remarkSembr } from './src/lib/remark-sembr.ts';
@@ -69,7 +70,9 @@ export default defineConfig({
 		inlineStylesheets: 'auto',
 	},
 	markdown: {
-		remarkPlugins: [remarkSembr],
+		processor: unified({
+			remarkPlugins: [remarkSembr],
+		}),
 		syntaxHighlight: false,
 	},
 	security: {
