@@ -379,11 +379,11 @@
 		font-weight: 700;
 	}
 
-	mark[data-supported="true"] {
+	:is(mark, em)[data-supported="true"] {
 		color: var(--color-heading);
 	}
 
-	mark[data-supported="false"] {
+	:is(mark, em)[data-supported="false"] {
 		color: var(--color-rule);
 	}
 

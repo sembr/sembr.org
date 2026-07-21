@@ -70,6 +70,39 @@ export const remarkSembr: Plugin<[], Root> = () => {
 			}
 		});
 
+
+		// FAQ comparison table: accessible support indicators and styled "None".
+		visit(tree, 'tableCell', (node) => {
+			if (node.children.length !== 1 || node.children[0]?.type !== 'text') {
+				return;
+			}
+			const value = node.children[0].value;
+			if (value === 'Supported') {
+				node.children = [
+					{
+						type: 'html',
+						value:
+							'<mark data-supported="true" title="Supported" aria-label="Supported">✓</mark>',
+					},
+				];
+			} else if (value === 'Not supported') {
+				node.children = [
+					{
+						type: 'html',
+						value:
+							'<mark data-supported="false" title="Not supported" aria-label="Not supported">✗</mark>',
+					},
+				];
+			} else if (value === 'None') {
+				node.children = [
+					{
+						type: 'html',
+						value: '<em data-supported="false">None</em>',
+					},
+				];
+			}
+		});
+
 		visit(tree, 'heading', (node) => {
 			if (
 				node.depth === 1 &&
