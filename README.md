@@ -18,6 +18,8 @@ belongs in `sembr/skills`.
 
 Changes to the specification README trigger its deployment workflow,
 which builds and deploys this website.
+Cloudflare Workers Builds also builds and deploys this repository,
+and runs builds for pull requests.
 Changes to skill documents also need a website rebuild;
 after merging them, run the specification repository's
 [Deploy workflow](https://github.com/sembr/specification/actions/workflows/deploy.yml)
