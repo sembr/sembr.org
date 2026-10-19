@@ -13,15 +13,15 @@ export const GET: APIRoute = async () => {
 		$schema: SCHEMA_URL,
 		skills: skills.map((entry) => ({
 			name: entry.data.name,
-			type: 'skill-md' as const,
+			// An archive carries the skill's scripts along with SKILL.md.
+			type: 'archive' as const,
 			description: entry.data.description,
-			url: `/.well-known/agent-skills/${entry.id}/SKILL.md`,
+			url: `/.well-known/agent-skills/${entry.id}.tar.gz`,
 			digest: entry.data.digest,
-			// Legacy v0.1.0 field for compatibility with clients
-			// that haven't adopted v0.2.0 yet 
-			// (e.g., vercel-labs/skills CLI as of writing).
+			// Legacy v0.1.0 field for clients that haven't adopted v0.2.0,
+			// which fetch each file from /.well-known/agent-skills/{name}/{path}.
 			// Spec-compliant v0.2.0 readers ignore unknown fields.
-			files: ['SKILL.md'],
+			files: Object.keys(entry.data.files),
 		})),
 	};
 	return new Response(JSON.stringify(body, null, 2) + '\n', {

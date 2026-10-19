@@ -21,7 +21,11 @@ const wellKnownSkills = {
 				entrypoint: './src/wellknown/index.ts',
 			});
 			injectRoute({
-				pattern: '/.well-known/agent-skills/[name]/[file]',
+				pattern: '/.well-known/agent-skills/[name].tar.gz',
+				entrypoint: './src/wellknown/archive.ts',
+			});
+			injectRoute({
+				pattern: '/.well-known/agent-skills/[name]/[...file]',
 				entrypoint: './src/wellknown/skill.ts',
 			});
 			injectRoute({
