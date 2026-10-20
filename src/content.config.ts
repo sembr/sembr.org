@@ -1,18 +1,18 @@
-import { createHash } from 'node:crypto';
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { parse as parseYaml } from 'yaml';
+import { sha256Digest, skillArchive } from './lib/archive.ts';
 
 const SPEC_URL = 'https://raw.githubusercontent.com/sembr/specification/main/README.md';
-const SKILLS_REPO = 'https://raw.githubusercontent.com/sembr/skills/main/skills';
+// Set SEMBR_SKILLS_REF to build from another branch of sembr/skills.
+const SKILLS_REF = process.env.SEMBR_SKILLS_REF ?? 'main';
+const SKILLS_REPO = `https://raw.githubusercontent.com/sembr/skills/${SKILLS_REF}/skills`;
 
-// Skills exposed under /.well-known/agent-skills/.
+// Skills exposed under /.well-known/agent-skills/, with every file each one installs.
 // Add new entries here when the sembr/skills repo grows.
-const SKILL_NAMES = ['sembr-reformat'] as const;
-
-function sha256Digest(source: string): string {
-	return `sha256:${createHash('sha256').update(source, 'utf8').digest('hex')}`;
-}
+const SKILLS = {
+	'sembr-reformat': ['SKILL.md', 'agents/openai.yaml', 'scripts/check.py'],
+} as const;
 
 // Convert raw HTML constructs in the spec source into plain Markdown for
 // clients that consume `entry.body` directly 
@@ -82,28 +82,45 @@ const skills = defineCollection({
 	schema: z.object({
 		name: z.string(),
 		description: z.string(),
+		// The skill's `.tar.gz` archive, base64-encoded, and its SHA-256 digest.
+		// The loader runs in Node, which has the zlib and crypto modules;
+		// the prerendered routes run in workerd, which doesn't.
+		archive: z.string(),
 		digest: z.string(),
+		// Each file's contents, by its path in the skill directory.
+		files: z.record(z.string(), z.string()),
 	}),
 	loader: {
 		name: 'sembr-skills',
 		load: async ({ store, parseData, generateDigest, logger }) => {
-			for (const id of SKILL_NAMES) {
-				const url = `${SKILLS_REPO}/${id}/SKILL.md`;
-				logger.info(`Fetching ${url}`);
+			for (const [id, paths] of Object.entries(SKILLS)) {
+				const files: Record<string, string> = {};
+				for (const path of paths) {
+					const url = `${SKILLS_REPO}/${id}/${path}`;
+					logger.info(`Fetching ${url}`);
 
-				const response = await fetch(url);
-				if (!response.ok) {
-					throw new Error(
-						`Failed to fetch skill ${id}: ${response.status} ${response.statusText}`,
-					);
+					const response = await fetch(url);
+					if (!response.ok) {
+						throw new Error(
+							`Failed to fetch ${path} for skill ${id}: ${response.status} ${response.statusText}`,
+						);
+					}
+					files[path] = await response.text();
 				}
 
-				const source = await response.text();
+				const source = files['SKILL.md'];
+				const url = `${SKILLS_REPO}/${id}/SKILL.md`;
+				const archive = skillArchive(files);
 				const data = await parseData({
 					id,
-					data: { ...parseSkillFrontmatter(source, { id, url }), digest: sha256Digest(source) },
+					data: {
+						...parseSkillFrontmatter(source, { id, url }),
+						archive: Buffer.from(archive).toString('base64'),
+						digest: sha256Digest(archive),
+						files,
+					},
 				});
-				store.set({ id, data, body: source, digest: generateDigest(source) });
+				store.set({ id, data, body: source, digest: generateDigest(JSON.stringify(files)) });
 			}
 		},
 	},

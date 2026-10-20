@@ -142,6 +142,31 @@ export function openApiDocument() {
 					},
 				},
 			},
+			'/.well-known/agent-skills/{name}.tar.gz': {
+				get: {
+					summary: 'Agent skill archive',
+					description: 'Returns the skill directory, including its scripts, as a gzip-compressed tar archive.',
+					parameters: [
+						{
+							name: 'name',
+							in: 'path',
+							required: true,
+							schema: { type: 'string' },
+						},
+					],
+					responses: {
+						'200': {
+							description: 'Agent skill archive',
+							content: {
+								'application/gzip': {},
+							},
+						},
+						'404': {
+							description: 'Skill not found',
+						},
+					},
+				},
+			},
 			'/.well-known/agent-skills/{name}/SKILL.md': {
 				get: {
 					summary: 'Agent skill document',
